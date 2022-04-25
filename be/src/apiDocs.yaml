@@ -1,0 +1,565 @@
+openapi: 3.0.1
+info:
+  title: BNPL Documentation
+  description: >-
+    This is swagger for BNPL service
+  contact:
+    email: thehien@telio.vn
+  version: 1.0.0
+servers:
+  - url: https://api.dev.telio.me/bnpl
+    description: development
+  - url: http://localhost:1234/bnpl
+    description: localhost
+paths:
+  /health-check:
+    get:
+      tags:
+        - healthcheck
+      summary: Health Check
+      description: /health-check
+      operationId: healthcheck  
+      responses:
+        "200":
+          description: health check success
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /ping:
+    get:
+      tags:
+        - healthcheck
+      summary: Health Check
+      description: /ping
+      operationId: ping  
+      responses:
+        "200":
+          description: ping success
+          content:
+            application/json:
+              schema:
+                type: string  
+                
+  /v1/orders/{soNumber}:
+    get:
+      tags:
+        - order
+      summary: Find order by so number | Zalo / Phoenix
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: soNumber
+          in: path
+          required: true
+          description: So Number
+          schema:
+            type : string
+            format: int64
+      description: /orders/{soNumber}
+      responses:
+        200:
+          description: Success
+          content: 
+            applicayion/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+    post:
+      tags: 
+        - order
+      summary: Update an order
+      security:
+        - ApiKeyAuth: []
+      description: /orders/{id}
+      parameters:
+        - name: id
+          in: path
+          description: Order Id
+          schema:
+            type: integer
+      requestBody: 
+        required: true
+        content: 
+          application/json: 
+            schema: 
+              $ref: "#/components/schemas/CreateOrderRequestBody"
+      responses:
+        200:
+          description: Update an order successfully
+        400:
+          description: Bad Request
+  /v1/orders:
+    post:
+      tags:
+        - order
+      summary: Create an order | Phoenix
+      security:
+        - ApiKeyAuth: []
+      description: /orders/:id
+      requestBody: 
+        required: true
+        content: 
+          application/json: 
+            schema: 
+              $ref: "#/components/schemas/CreateOrderRequestBody"
+      responses:
+        200:
+          description: Success
+          content: 
+            applicayion/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        400:
+          description: Bad Request
+  /v1/customers:
+    get:
+      tags:
+        - customer
+      summary: Get all customer
+      security:
+        - ApiKeyAuth: []
+      description: /customers
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: query
+          name: sort
+          description: sort
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: orderBy
+          description: order by
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: page
+          description: Page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: size
+          description: Page size
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Get list customer successfully
+        400:
+          description: Bad Request
+  /v1/customer/{id}:
+    get:
+      tags:
+        - customer
+      summary: Find customer by Id
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Customer ID
+          schema:
+            type : integer
+            format: int64
+      description: /customer/{id}
+      responses:
+        200:
+          description: Success
+          content: 
+            applicayion/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+    post:
+      tags: 
+        - customer
+      summary: Update a customer
+      description: /customer/{id}
+      parameters:
+        - name: id
+          in: path
+          description: Customer Id
+          schema:
+            type: integer
+      requestBody: 
+        required: true
+        content: 
+          application/json: 
+            schema: 
+              $ref: "#/components/schemas/UpdateCustomerRequesBody"
+      responses:
+        200:
+          description: Success
+          content: 
+            applicayion/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        400:
+          description: Bad Request
+  /v1/customer:
+    post:
+      tags: 
+        - customer
+      summary: Create a customer
+      security:
+        - ApiKeyAuth: []
+      description: /v1/customer
+      requestBody: 
+        required: true
+        content: 
+          application/json: 
+            schema: 
+              $ref: "#/components/schemas/CreateCustomerRequesBody"
+      responses:
+        200:
+          description: Success
+          content: 
+            applicayion/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        400:
+          description: Bad Request
+  /v1/customers/eligibility/{id}:
+    get:
+      tags: 
+        - customer
+      summary: Check if user is eligible | Zalo
+      security:
+        - ApiKeyAuth: []
+      description: /v1/customers/eligibility/{id}
+      parameters:
+        - name: id
+          in: path
+          description: Customer Id
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad Request
+  /v1/customers/{id}/orders:
+    get:
+      tags: 
+        - customer
+      summary: Get customer's orders | Zalo
+      security:
+        - ApiKeyAuth: []
+      description: /v1/customers/{id}/orders
+      parameters:
+        - name: id
+          in: path
+          description: Customer Id
+          schema:
+            type: integer
+        - in: query
+          name: page
+          description: Page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: size
+          description: Page size
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad Request
+  /v1/customers/{id}/orders:
+    get:
+      tags: 
+        - customer
+      summary: Get customer's orders | Zalo
+      security:
+        - ApiKeyAuth: []
+      description: /v1/customers/{id}/orders
+      parameters:
+        - name: id
+          in: path
+          description: Customer Id
+          schema:
+            type: integer
+        - in: query
+          name: page
+          description: Page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: size
+          description: Page size
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successful
+        400:
+          description: Bad Request
+  /v1/financial-products/csv:
+    post:
+      tags: 
+        - financial product
+      summary: Upload customer and financial product csv | Zalo
+      security:
+        - ApiKeyAuth: []
+      description: /v1/financial-products/csv
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: Success
+          content: 
+            applicayion/json:
+              schema:
+                $ref: "#/components/schemas/FinancialCsvSuccessfulUpload"
+        400:
+          description: Bad Request
+          content: 
+            applicayion/json:
+              schema:
+                $ref: "#/components/schemas/FinancialCsvFailedUpload"
+  /v1/outstanding/csv:
+    post:
+      tags: 
+        - update outstanding
+      summary: Upload update outstanding, late fee of order
+      security:
+        - ApiKeyAuth: []
+      description: /v1/outstanding/csv
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: Success
+          content: 
+            applicayion/json:
+              schema:
+                $ref: "#/components/schemas/UpdateOutstandingCsvSuccessfulUpload"
+        400:
+          description: Bad Request
+          content: 
+            applicayion/json:
+              schema:
+                $ref: "#/components/schemas/UpdateOutstandingCsvFailedUpload"              
+components:
+  securitySchemes:
+    ApiKeyAuth:        
+      type: apiKey
+      in: header
+      name: x-api-key 
+  schemas:
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2
+        financial_product_id: 
+          type: integer
+          format: int64
+          example: 2
+        customer_id:
+          type: integer
+          format: int64
+          example: 1002
+        so_number: 
+          type: string
+          format: int64
+          example: '50010006041'
+        late_fee: 
+          type: number
+          format: double
+          example: 15000
+        order_amount: 
+          type: number
+          format: double
+          example: 26000
+        total_outstanding:
+          type: number
+          format: double
+          example: 4000000
+        order_date: 
+          type: date
+          example: "2021-12-22T08:23:14.071Z"
+        repayment_date:
+          type: integer
+          format: int64
+          example: 7
+        due_date: 
+          type: date
+          example: "2021-12-22T08:23:14.071Z"
+        delivery_date: 
+          type: date
+          example: "2021-12-22T08:23:14.071Z"
+        convenience_fee_percentage: 
+          type: number
+          format: double
+          example: 10
+        late_fee_percentage: 
+          type: number
+          format: double
+          example: 10
+        status:
+          type: string
+          format: int64
+          example: 'CANCELLED'
+        created_at: 
+          type: date
+          example: "2021-12-22T08:23:14.071Z"
+        updated_at: 
+          type: date
+          example: "2021-12-22T08:23:14.071Z"
+    CreateOrderRequestBody:
+      type: object
+      properties:
+        financial_product_id: 
+          type: integer
+          format: int64
+          example: 2
+        customer_id:
+          type: integer
+          format: int64
+          example: 1002
+        so_number: 
+          type: string
+          format: int64
+          example: '50010006041'
+        order_amount: 
+          type: number
+          format: double
+          example: 26000
+        order_date: 
+          type: date
+          example: "2021-12-22T08:23:14.071Z"
+        location_code:
+          type: string
+          example: 'VHNN'
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2
+        customer_id: 
+          type: integer
+          format: int64
+          example: 1
+        debt_amount:
+          type: double
+          example: 12
+        created_at: 
+          type: date
+          example: "2021-12-22T08:23:14.071Z"
+        updated_at: 
+          type: date
+          example: "2021-12-22T08:23:14.071Z"
+    UpdateCustomerRequesBody:
+      type: object
+      properties:
+        debt_amount:
+          type: double
+          example: 12
+        status: 
+            type: string
+            example: 'ACTIVE'
+    CreateCustomerRequesBody:
+      type: object
+      properties:
+        customer_id: 
+          type: integer
+          format: int64
+          example: 2
+        debt_amount:
+          type: double
+          example: 12
+        status: 
+            type: string
+            example: 'ACTIVE'
+    FinancialCsvSuccessfulUpload:
+      type: object
+      properties:
+        financialProductId: 
+          type: integer
+          format: int64
+          example: 3
+        customerId:
+          type: string
+          format: int64
+          example: 1
+        message:
+          type: string
+          format: int64
+          example: 'Customer 1 update successfully'
+    FinancialCsvFailedUpload:
+      type: object
+      properties:
+        financialProductId: 
+          type: integer
+          format: int64
+          example: 3
+        customerId:
+          type: string
+          format: int64
+          example: 1
+        message:
+          type: string
+          format: int64
+          example: 'Customer 1 update failed'
+    UpdateOutstandingCsvSuccessfulUpload:
+      type: object
+      properties:
+        soNumber: 
+          type: string
+          format: int64
+          example: 2000006817
+        customerId:
+          type: string
+          format: int64
+          example: 1
+        message:
+          type: string
+          format: int64
+          example: 'Dòng 1: cập nhật thành cồng'
+    UpdateOutstandingCsvFailedUpload:
+      type: object
+      properties:
+        soNumber: 
+          type: string
+          format: int64
+          example: 2000006817
+        customerId:
+          type: string
+          format: int64
+          example: 1
+        message:
+          type: string
+          format: int64
+          example: 'Dòng 1: không tìm thấy đơn hàng. so_number hoặc customer_id không đúng'
+
+        

@@ -1,0 +1,28 @@
+.wrapContainer{
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mainScreen{
+  width: 100%;
+  min-height: 100vh;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 50px;
+  align-items: center;
+}
+.wrapSwiper{
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.wrapButtonSection{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}

@@ -1,0 +1,11 @@
+node_modules
+package-lock.json
+dist
+
+src/version.json
+
+.env
+
+.vscode
+
+src/common/upload/temp-uploads

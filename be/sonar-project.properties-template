@@ -1,0 +1,10 @@
+sonar.projectKey=%PROJECT_NAME%-%BRANCH%
+sonar.projectName=%PROJECT_NAME%-%BRANCH%
+sonar.projectVersion=1.0
+sonar.sourceEncoding=UTF-8
+sonar.sources=src
+sonar.exclusions=**/node_modules/**,**/src/test/**
+sonar.tests=src/test
+sonar.test.inclusions=**/src/test/**
+sonar.javascript.lcov.reportPaths=coverage/lcov.info
+sonar.typescript.lcov.reportPaths=coverage/lcov.info
